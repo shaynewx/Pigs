@@ -36,3 +36,38 @@ git clone git@github.com:shaynewx/Pigs.git
 cd pigs
 ```
 
+## Usage
+
+1. To start using Pigs, initialize the repository:
+```sh
+./pigs-init
+```
+
+2. Add files to the staging area:
+```sh
+./pigs-add filename1 filename2
+```
+
+3. Commit changes:
+```sh
+./pigs-commit -m "Your commit message"
+```
+
+4. View commit logs:
+```sh
+./pigs-log
+```
+
+## Contribution
+Feel free to fork this project and make your own changes. Pull requests are welcome for bug fixes, improvements, and adding new features.
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+## Authors
+- **[shaynewx](https://github.com/shaynewx)**
+
+## Acknowledgements
+- Inspired by the core functionalities of Git.
+- Assignment for COMP(2041|9044) at UNSW.
