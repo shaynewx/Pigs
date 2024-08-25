@@ -1,0 +1,53 @@
+#!/bin/dash
+# check if .pig exists
+if ! test -d .pig/
+then
+    echo pigs-show: error: pigs repository directory .pig not found;
+    exit 1;
+fi
+
+# check the format of argument
+match=$(echo "$1" | egrep '^[0-9]*:.+');
+if test "$match" = ""
+then
+    echo pigs-show: error: invalid argument;
+    exit 1;
+fi
+
+# record the input
+version=$(echo "$1" | sed 's/:.*$//g');
+check_file=$(echo "$1" | sed 's/^.*://g');
+
+# check the number of commit
+file=".pig/commit_count.txt"
+commit_count=$(cat "$file")
+
+# if input without number
+if test "$version" = ""
+then
+    # if there is no file in index then report an error; else cat file
+    if ! test -e .pig/index/"$check_file"
+    then
+        echo pigs-show: error: \'"$check_file"\' not found in index
+        exit 1;
+    else
+        cat .pig/index/"$check_file"
+    fi
+# if input with number
+else   
+    # if version >= commit_count then report an error
+    if test "$version" -ge "$commit_count"
+    then
+        echo pigs-show: error: unknown commit \'"$version"\';
+        exit 1;
+    else
+        # if there is no file in corresponding version then report an error; else cat file
+        if ! test -e .pig/repo/"$version"/"$check_file"
+        then
+            echo pigs-show: error: \'"$check_file"\' not found in commit "$version"
+            exit 1;
+        else
+            cat .pig/repo/"$version"/"$check_file"
+        fi
+    fi
+fi

@@ -1,0 +1,120 @@
+#!/bin/dash
+# check if .pig exists
+if ! test -d .pig/
+then
+    echo pigs-commit: error: pigs repository directory .pig not found;
+    exit 1;
+fi
+
+# check for correct command input
+command_count=1
+if test "$1" = "-a"
+then
+    command_count=2
+    shift
+fi
+
+if test "$1" = "-m"
+then
+    shift
+else
+    echo Wrong command;
+    exit 1;
+fi
+
+# check for message input 
+if test "$#" -ne 1
+then 
+    echo No message;
+    exit 1;
+fi
+
+# check for message input 
+if test "$#" -ne 1
+then 
+    echo No message;
+    exit 1;
+fi
+
+# check if there is no file in index
+file_count=0
+for file in .pig/index/*
+do
+    if test -f "$file" 
+    then
+        file_count=$((file_count + 1))
+    fi
+done
+
+if test "$file_count" -eq 0
+then
+    echo nothing to commit;
+    exit 1;
+fi
+
+# check the number of commit
+file=".pig/commit_count.txt"
+commit_count=$(cat "$file")
+# get the list of files index
+index_files=$(ls .pig/index)
+
+# commit -a : for all files already in .pig/index
+# have their contents from the current directory added to the index
+if test "$command_count" -eq 2
+then
+    for file in $index_files
+    do
+        if test -e "$file"
+        then
+            cat "$file" > .pig/index/"$file"
+        fi
+    done
+fi
+
+# compare files in index and latest version in repo
+# if they are same then report error
+# if they are not same then create a new version in repo
+
+# if it is the first time to commit then create the first version in repo
+if test "$commit_count" -eq 0
+then
+    mkdir .pig/repo/"$commit_count";
+    for file in $index_files
+    do
+        if test -e .pig/index/"$file"
+        then
+            cat .pig/index/"$file" > .pig/repo/"$commit_count"/"$file"
+        fi
+    done
+    # echo Commit
+    echo Committed as commit "$commit_count";
+    # update commit.log
+    echo "$commit_count" "$1" >> .pig/commit.log;
+    # modify commit_count
+    commit_count=$((commit_count + 1));
+    echo "$commit_count" > .pig/commit_count.txt;
+else
+    # if it is not the first time to commit
+    if diff -q .pig/index .pig/repo/"$((commit_count-1))" >> /dev/null
+    then
+        echo nothing to commit;
+        exit 1;
+    else
+    # create a new version in repo
+        mkdir .pig/repo/"$commit_count";
+        for file in $index_files
+        do
+            if test -e .pig/index/"$file"
+            then
+                cat .pig/index/"$file" > .pig/repo/"$commit_count"/"$file"
+            fi
+        done
+        # echo Commit
+        echo Committed as commit "$commit_count";
+        # update commit.log
+        echo "$commit_count" "$1" >> .pig/commit.log;
+        # modify commit_count
+        commit_count=$((commit_count + 1));
+        echo "$commit_count" > .pig/commit_count.txt;
+    fi
+fi

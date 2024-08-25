@@ -1,0 +1,17 @@
+#!/bin/dash
+# check if .pig exists
+if ! test -d .pig/
+then
+    echo pigs-log: error: pigs repository directory .pig not found;
+    exit 1;
+fi
+
+# check if log exists
+if ! test -e .pig/commit.log
+then
+    echo pigs-log: error: commit.log not found;
+    exit 1;
+fi
+
+# displaying the contents of log in reverse line by line
+tac -r .pig/commit.log

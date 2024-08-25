@@ -1,0 +1,31 @@
+#!/bin/dash
+# check if .pig exists
+if ! test -d .pig/
+then
+    echo pigs-add: error: pigs repository directory .pig not found;
+    exit 1;
+fi
+
+# check if file exists
+for file in "$@"
+do
+    if ! test -e "$file" && ! test -e .pig/index/"$file"
+    then
+        echo pigs-add: error: can not open \'non_existent_file\';
+        exit 1;
+    fi
+done
+
+# if file exists then copy to index
+for file in "$@"
+do
+    if test -e "$file"
+    then
+        cat "$file" > .pig/index/"$file"
+    else
+        if test -e .pig/index/"$file"
+        then
+            rm .pig/index/"$file"
+        fi
+    fi
+done

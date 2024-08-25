@@ -1,0 +1,20 @@
+#!/bin/dash
+# 23T2-COMP9044_Assignment1
+# zID: z5442066
+# Start_date: 01/07/2023
+# Latest_update: 08/07/2023
+
+# check if .pig exists
+if test -d ".pig"
+then
+    echo pigs-init: error: .pig already exists;
+    exit 1;
+fi
+
+# initialize .pig
+mkdir .pig;
+mkdir .pig/index;
+mkdir .pig/repo;
+touch .pig/commit.log;
+echo "0" > .pig/commit_count.txt;
+echo Initialized empty pigs repository in .pig
