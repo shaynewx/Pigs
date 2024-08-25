@@ -22,11 +22,6 @@ The following commands have been implemented in Pigs:
 ### `pigs-log`
 - Displays a log of all commits made to the repository, showing the commit number and message.
 
-### `pigs-rm [--force] [--cached] [filenames...]`
-- Removes files from the index and/or the working directory.
-- `--cached` option removes the file only from the index.
-- `--force` option forces the removal even if it might cause data loss.
-
 ## Getting Started
 
 ### Prerequisites
